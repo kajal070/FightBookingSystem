@@ -21,11 +21,12 @@ using AutoMapper;
         [Authorize]
         [HttpPost]
         [Route("Booking")]
-        public async Task<IActionResult> AddBooking([FromBody]BookingDto book)
+        public async Task<IActionResult> AddBooking([FromBody]BookingDto book,int id)
         {
                 var BOOK=mapper.Map<Booking>(book);
-                 BOOK.ReferenceNo=21;
-                BOOK.FlightId=2;
+                 Random s = new Random();
+                 BOOK.ReferenceNo=s.Next(1,100);
+                BOOK.FlightId=id;
                /* var Book = new Booking();
                 Book.Age=book.Age;
                 Book.City=book.City;

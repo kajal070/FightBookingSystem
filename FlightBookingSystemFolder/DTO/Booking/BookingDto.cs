@@ -33,5 +33,6 @@ namespace FlightBookingSystemFolder.DTO.Booking
          [Required(ErrorMessage = "Email is Required")]
          [DataType(DataType.EmailAddress)]
          public string Email { get; set; }
+          public int ReferenceNo { get; set; }
     }
 }
