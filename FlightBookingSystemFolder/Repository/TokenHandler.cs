@@ -7,29 +7,29 @@ using System.IdentityModel.Tokens.Jwt;
 
 public class TokenHandler : ITokenHandler
 {
-    private readonly IConfiguration configuration;
-    public TokenHandler(IConfiguration configuration)
+    private readonly IConfiguration _configuration;
+    public  TokenHandler(IConfiguration configuration)
     {
-        this.configuration=configuration;
+        this._configuration=configuration;
     }
     public string CreateTokenAsync(Registration reg)
     {
-         var key =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+         //var key =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
 
             var claims= new Claim[]{
                 new Claim(ClaimTypes.Name,reg.FullName),
                 new Claim(ClaimTypes.NameIdentifier,reg.Email.ToString())
         
             };
-
+             var key =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signingCredentials= new SigningCredentials(
                 key,SecurityAlgorithms.HmacSha256);
             
            var token=new JwtSecurityToken(
-            configuration["Jwt:Issuer"],
-            configuration["Jwt:Audience"],
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
             claims,
-            expires:DateTime.Now.AddMinutes(10),
+            expires:DateTime.Now.AddDays(1),
             signingCredentials:signingCredentials
            );
            var jwtTokenhandler = new JwtSecurityTokenHandler();

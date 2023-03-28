@@ -12,46 +12,91 @@ using AutoMapper;
     {
          private readonly IRepositoryBase<Booking> interfaceobj = null;
          private readonly IMapper mapper;
-       
-       public BookingController(IRepositoryBase<Booking> interfaceobj, IMapper mapper)
+        
+          private readonly IRepositoryBase<Flight> interfaceobjF = null;
+          
+         
+       public BookingController(IRepositoryBase<Booking> interfaceobj, IMapper mapper,IRepositoryBase<Flight> interfaceobjF)
         {
             this.interfaceobj = interfaceobj;
             this.mapper=mapper;
+              // this.session=session;
+           this.interfaceobjF=interfaceobjF;
         }
-        [Authorize]
+       // [Authorize]
         [HttpPost]
         [Route("Booking")]
-        public async Task<IActionResult> AddBooking([FromBody]BookingDto book,int id)
-        {
+        public async Task<IActionResult> AddBooking(int Id,[FromBody]BookingDto book)
+        {   
                 var BOOK=mapper.Map<Booking>(book);
                  Random s = new Random();
                  BOOK.ReferenceNo=s.Next(1,100);
-                BOOK.FlightId=id;
-               /* var Book = new Booking();
-                Book.Age=book.Age;
-                Book.City=book.City;
-                Book.Country = book.Country;
-                Book.Passenger_Name=book.Passenger_Name;
-                Book.PhoneNumber= book.PhoneNumber;
-                Book.Gender=book.Gender;
-                Book.Passport_No=book.Passport_No;
-                //Random s = new Random();
-                Book.Email=book.Email;*/
-                interfaceobj.InsertModel(BOOK);
-             return Ok("Successfully Booked!");
+                 BOOK.FlightId=Id;
+                 interfaceobj.InsertModel(BOOK);
+                 return Ok( BOOK.ReferenceNo);
              //else
             // return StatusCode(StatusCodes.Status500InternalServerError,"Something Went Wrong");
             
         }
-        // [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("Booking_Information")]
         public async Task<IActionResult> GetAllData()
         {
+            try{
             var result =  interfaceobj.GetModel();
 
             return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return Ok(ex.Message);
+            }
         }
+        [HttpGet]
+        [Route("GetBookingDetails")]
+        public async Task<IActionResult> GetAllData(int id)
+        { 
+            try
+            {
+                  var result = (from model in interfaceobj.GetModel()
+                  join fmodel in interfaceobjF.GetModel()
+                  on model.FlightId equals fmodel.Flight_Id
+                  where model.ReferenceNo == id
+                  select new { Model = model, FModel = fmodel }).FirstOrDefault();
 
+                 if (result != null)
+                  {
+                    var FlightAndBooking = new BookingAndFlightDto
+                    {
+                      Passenger_Name = result.Model.Passenger_Name,
+                      PhoneNumber = result.Model.PhoneNumber,
+                      DateAndTime=result.FModel.DateAndTime,
+                      Name = result.FModel.Name,
+                      To = result.FModel.To,
+                      From = result.FModel.From,
+                      Fare = result.FModel.Fare,
+                      FlightId=result.Model.FlightId,
+                      Booking_id =result.Model.Booking_id
+                     };
+                    
+
+                    // Return the newly created DTO object
+                    return Ok(FlightAndBooking);
+                  }
+
+                   else
+                     // Return a 404 Not Found response if no data is found
+                     return NotFound();
+                   
+            }
+               catch(Exception ex)
+             {
+            return Ok(ex.Message);
+             }
+        }
     }
+
+    
+
     
