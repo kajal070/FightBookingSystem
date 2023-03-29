@@ -14,7 +14,7 @@ public class TokenHandler : ITokenHandler
     }
     public string CreateTokenAsync(Registration reg)
     {
-         //var key =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+         
 
             var claims= new Claim[]{
                 new Claim(ClaimTypes.Name,reg.FullName),

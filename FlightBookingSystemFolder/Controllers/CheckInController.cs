@@ -18,6 +18,7 @@ using AutoMapper;
             this.interfaceobj = interfaceobj;
              this.mapper=mapper;
         }
+        [Authorize]
         [HttpPost]
         [Route("CheckIn")]
         public async Task<IActionResult> AddPost(int id)

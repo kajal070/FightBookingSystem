@@ -28,10 +28,7 @@ using AutoMapper;
                var user=new LogInDto();
                user.Email=reg.Email;
                user.Password=reg.Password; 
-               /* Reg.Email=reg.Email;
-                Reg.Password=reg.Password;
-                Reg.FullName = reg.FullName;
-               interfaceobj.InsertModel(Reg);*/
+               
              return Ok(await Login(user));
             
         }
@@ -50,14 +47,12 @@ using AutoMapper;
         { 
             
           try{
-              //var Reg =mapper.Map<Registration>(log);
-               // var model = interfaceobj.GetModel().Where(x=>x.Email==Reg.Email && x.Password==Reg.Password).FirstOrDefault();
+              
              var model= await Authenticate(log.Email,log.Password);
 
             if (model!=null)
             {
-              //var token = await tokenHandler.CreateTokenAsync(model);
-             // return Ok(token);
+              
                return new LogInResDto
                  {
                    Email=model.Email,

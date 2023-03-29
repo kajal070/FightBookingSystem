@@ -20,10 +20,9 @@ using AutoMapper;
         {
             this.interfaceobj = interfaceobj;
             this.mapper=mapper;
-              // this.session=session;
            this.interfaceobjF=interfaceobjF;
         }
-       // [Authorize]
+       [Authorize]
         [HttpPost]
         [Route("Booking")]
         public async Task<IActionResult> AddBooking(int Id,[FromBody]BookingDto book)
@@ -34,11 +33,10 @@ using AutoMapper;
                  BOOK.FlightId=Id;
                  interfaceobj.InsertModel(BOOK);
                  return Ok( BOOK.ReferenceNo);
-             //else
-            // return StatusCode(StatusCodes.Status500InternalServerError,"Something Went Wrong");
+           
             
         }
-        //[Authorize]
+       [Authorize]
         [HttpGet]
         [Route("Booking_Information")]
         public async Task<IActionResult> GetAllData()

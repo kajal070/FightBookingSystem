@@ -19,7 +19,6 @@ namespace FlightBookingSystemFolder.Models
         public string Country { get; set; }
         [Required]
         [StringLength(8, ErrorMessage = "PassPost Number Must be 8 characters Only")]
-        //[RegularExpression(@"^[A-Z]{1}-[0-9]{7}$", ErrorMessage = "PassPost is not valid")]
         public string Passport_No { get; set; }
          [Required]
         [StringLength(10)]
